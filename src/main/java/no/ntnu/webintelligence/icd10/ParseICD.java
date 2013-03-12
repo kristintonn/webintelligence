@@ -17,10 +17,12 @@ public static void main(String[] args) {
         try {
             is = new FileInputStream("src/main/resources/icd10no.owl");     
             OntModel onto = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
-            onto.read(is, "OWL/XML");
+            
+            onto.read(is, "RDF/XML");
             Iterator it = onto.listClasses();
             while(it.hasNext()){
                 System.out.println(it.next());
+                //
             }
         }
         catch (Exception e) {
