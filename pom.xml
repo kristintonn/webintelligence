@@ -48,6 +48,12 @@
             <version>3.2</version>
             <classifier>with-deps</classifier>
         </dependency>  
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>3.5.0</version>
+            <type>jar</type>
+        </dependency> 
             
     </dependencies>
 </project>

@@ -54,7 +54,7 @@ public class ParseICD {
                     value = value.substring(0, i - 2);
                    
                     if (predicate.getLocalName().equals("label")){
-                        icd10.setTitle(value);
+                        icd10.setLabel(value);
                     }
                     else if (predicate.getLocalName().equals("synonym")){
                         icd10.addSynonym(value);
