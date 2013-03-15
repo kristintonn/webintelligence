@@ -22,9 +22,10 @@ public class ParseICD {
         parsedICDs = new ArrayList<ICD10>();
         
         FileInputStream is;
-
+        
         try {
             is = new FileInputStream("src/main/resources/icd10no.owl");
+            
             OntModel onto = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
             onto.read(is, "RDF/XML");
 
@@ -45,8 +46,9 @@ public class ParseICD {
                 
                 if (!icd10.getId().equals(subject.getLocalName())){
                     parsedICDs.add(icd10);
+                    icd10 = new ICD10(null, null, null);
                 }
-
+                
                 if (predicate.getLocalName().equals("label") || predicate.getLocalName().equals("synonym")) {
                     String value = object.toString();
                     int i = value.indexOf("http");
@@ -120,7 +122,9 @@ public class ParseICD {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+        for (int i = 0; i < parsedICDs.size(); i++){
+            System.out.println(parsedICDs.get(i));
+        }
     }
 
     public ArrayList<ICD10> getParsedICDs() {

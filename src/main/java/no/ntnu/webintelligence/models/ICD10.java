@@ -36,7 +36,7 @@ public class ICD10 {
         
         @Override
         public String toString(){
-            return id + ": " + title;
+            return id + ": " + title + ", " + synonyms.toString();
         }
 	
 }
