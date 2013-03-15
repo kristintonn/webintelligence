@@ -1,9 +1,7 @@
 package no.ntnu.webintelligence.parsers;
 
-import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
-import com.hp.hpl.jena.ontology.OntProperty;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -38,17 +36,18 @@ public class ParseICD {
                 Property predicate = stmt.getPredicate();   // get the predicate
                 RDFNode object = stmt.getObject();      // get the object
 
+                // Create new object
                 if (icd10.getId() == null) {
                     icd10 = new ICD10(subject.getLocalName(), null, null);
-                } else {
-                    
                 }
                 
+                // Add object to list when no more statements
                 if (!icd10.getId().equals(subject.getLocalName())){
                     parsedICDs.add(icd10);
                     icd10 = new ICD10(null, null, null);
                 }
                 
+                // Add label and synonyms
                 if (predicate.getLocalName().equals("label") || predicate.getLocalName().equals("synonym")) {
                     String value = object.toString();
                     int i = value.indexOf("http");
@@ -60,19 +59,7 @@ public class ParseICD {
                     else if (predicate.getLocalName().equals("synonym")){
                         icd10.addSynonym(value);
                     }
-                }
-                
-
-
-                //System.out.print(" " + predicate.getLocalName() + " ");
-                if (object instanceof Resource) {
-                    //System.out.print(object.asResource());
-                } else {
-                    // object is a literal
-                    //System.out.print(" \"" + object.asLiteral() + "\"");
-                }
-
-                //System.out.println(" .");
+                }           
             }
 //            Iterator it = onto.listAllOntProperties();
 //            while (it.hasNext()) {

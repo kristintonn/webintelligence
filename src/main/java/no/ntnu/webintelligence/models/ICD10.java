@@ -32,8 +32,7 @@ public class ICD10 {
 	public void addSynonym(String syn){
 		synonyms.add(syn);
 	}
-        
-        
+             
         @Override
         public String toString(){
             return id + ": " + title + ", " + synonyms.toString();
