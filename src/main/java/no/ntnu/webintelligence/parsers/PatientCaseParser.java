@@ -21,12 +21,9 @@ public class PatientCaseParser {
 
     public PatientCaseParser() {
         parsedCases = new ArrayList<PatientCase>();
-
         BufferedReader is;
-
         String fileName;
-        
-
+       
         for (int c = 1; c <= 8; c++) {
             String stringText = "";
             fileName = "src/main/resources/cases/case" + c + ".txt";
@@ -49,10 +46,14 @@ public class PatientCaseParser {
 
         }
         for (int i = 0; i < parsedCases.size(); i++) {
-            System.out.println(parsedCases.get(i));
+            //System.out.println(parsedCases.get(i));
         }
     }
 
+    public ArrayList<PatientCase> getParsedCases(){
+        return parsedCases;
+    }
+    
     public static void main(String[] args) {
         PatientCaseParser parseCase = new PatientCaseParser();
     }

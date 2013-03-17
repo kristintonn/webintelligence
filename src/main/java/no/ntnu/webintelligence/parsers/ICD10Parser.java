@@ -110,7 +110,7 @@ public class ICD10Parser {
             e.printStackTrace();
         }
         for (int i = 0; i < parsedICDs.size(); i++){
-            System.out.println(parsedICDs.get(i));
+            //System.out.println(parsedICDs.get(i));
         }
     }
 
