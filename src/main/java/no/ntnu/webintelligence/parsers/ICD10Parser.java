@@ -12,11 +12,11 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import no.ntnu.webintelligence.models.ICD10;
 
-public class ParseICD {
+public class ICD10Parser {
 
     private ArrayList<ICD10> parsedICDs;
 
-    public ParseICD() {
+    public ICD10Parser() {
         parsedICDs = new ArrayList<ICD10>();
         
         FileInputStream is;
@@ -119,6 +119,6 @@ public class ParseICD {
     }
     
     public static void main(String[] args) {
-        ParseICD parseICD = new ParseICD();
+        ICD10Parser parseICD = new ICD10Parser();
     }
 }

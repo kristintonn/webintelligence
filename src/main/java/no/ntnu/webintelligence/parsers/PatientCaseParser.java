@@ -15,11 +15,11 @@ import no.ntnu.webintelligence.models.PatientCase;
  *
  * @author Ida Katrine
  */
-public class ParseCase {
+public class PatientCaseParser {
 
     private ArrayList<PatientCase> parsedCases;
 
-    public ParseCase() {
+    public PatientCaseParser() {
         parsedCases = new ArrayList<PatientCase>();
 
         BufferedReader is;
@@ -54,6 +54,6 @@ public class ParseCase {
     }
 
     public static void main(String[] args) {
-        ParseCase parseCase = new ParseCase();
+        PatientCaseParser parseCase = new PatientCaseParser();
     }
 }
