@@ -43,19 +43,28 @@ public class NLHChapterParser {
         for (Element e : body) {
             //System.out.println(e.getAllElements());
         }
-        String title = "";
-        Elements docs = doc.getElementsByClass("seksjon2");
+      String title = "";
+        Elements docs;
+        if(doc.select("h2") != null){
+            docs = doc.select("h2");
+        }
+        else{
+            docs = doc.select("h1");
+        }
+      
         for (Element e : docs) {
             int length = id.length();
-            int ind = e.text().indexOf("Publisert");
-            if (ind > 0) {
-                title = e.text().substring(length + 1, ind);
-                System.out.println(title);
-            }
+           // int ind = e.text().indexOf("Publisert");
+            //if (ind > 0) {
+              //  title = e.text().substring(length + 1, ind);
+                System.out.println(e.text());
+           // }
 
         }
         return new NLHChapter(id, title, "");
-    }
+
+        }
+    
 
     public ArrayList<NLHChapter> getChapters() {
         return chapters;
