@@ -15,18 +15,15 @@ import no.ntnu.webintelligence.models.PatientCase;
  *
  * @author Ida Katrine
  */
-public class ParseCase {
+public class PatientCaseParser {
 
     private ArrayList<PatientCase> parsedCases;
 
-    public ParseCase() {
+    public PatientCaseParser() {
         parsedCases = new ArrayList<PatientCase>();
-
         BufferedReader is;
-
         String fileName;
-        
-
+       
         for (int c = 1; c <= 8; c++) {
             String stringText = "";
             fileName = "src/main/resources/cases/case" + c + ".txt";
@@ -49,11 +46,15 @@ public class ParseCase {
 
         }
         for (int i = 0; i < parsedCases.size(); i++) {
-            System.out.println(parsedCases.get(i));
+            //System.out.println(parsedCases.get(i));
         }
     }
 
+    public ArrayList<PatientCase> getParsedCases(){
+        return parsedCases;
+    }
+    
     public static void main(String[] args) {
-        ParseCase parseCase = new ParseCase();
+        PatientCaseParser parseCase = new PatientCaseParser();
     }
 }

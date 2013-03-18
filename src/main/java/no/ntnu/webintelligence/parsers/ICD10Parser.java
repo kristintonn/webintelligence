@@ -1,9 +1,7 @@
 package no.ntnu.webintelligence.parsers;
 
-import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
-import com.hp.hpl.jena.ontology.OntProperty;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -14,11 +12,11 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import no.ntnu.webintelligence.models.ICD10;
 
-public class ParseICD {
+public class ICD10Parser {
 
     private ArrayList<ICD10> parsedICDs;
 
-    public ParseICD() {
+    public ICD10Parser() {
         parsedICDs = new ArrayList<ICD10>();
         
         FileInputStream is;
@@ -38,41 +36,30 @@ public class ParseICD {
                 Property predicate = stmt.getPredicate();   // get the predicate
                 RDFNode object = stmt.getObject();      // get the object
 
+                // Create new object
                 if (icd10.getId() == null) {
                     icd10 = new ICD10(subject.getLocalName(), null, null);
-                } else {
-                    
                 }
                 
+                // Add object to list when no more statements
                 if (!icd10.getId().equals(subject.getLocalName())){
                     parsedICDs.add(icd10);
                     icd10 = new ICD10(null, null, null);
                 }
                 
+                // Add label and synonyms
                 if (predicate.getLocalName().equals("label") || predicate.getLocalName().equals("synonym")) {
                     String value = object.toString();
                     int i = value.indexOf("http");
                     value = value.substring(0, i - 2);
                    
                     if (predicate.getLocalName().equals("label")){
-                        icd10.setTitle(value);
+                        icd10.setLabel(value);
                     }
                     else if (predicate.getLocalName().equals("synonym")){
                         icd10.addSynonym(value);
                     }
-                }
-                
-
-
-                //System.out.print(" " + predicate.getLocalName() + " ");
-                if (object instanceof Resource) {
-                    //System.out.print(object.asResource());
-                } else {
-                    // object is a literal
-                    //System.out.print(" \"" + object.asLiteral() + "\"");
-                }
-
-                //System.out.println(" .");
+                }           
             }
 //            Iterator it = onto.listAllOntProperties();
 //            while (it.hasNext()) {
@@ -123,7 +110,7 @@ public class ParseICD {
             e.printStackTrace();
         }
         for (int i = 0; i < parsedICDs.size(); i++){
-            System.out.println(parsedICDs.get(i));
+            //System.out.println(parsedICDs.get(i));
         }
     }
 
@@ -132,6 +119,6 @@ public class ParseICD {
     }
     
     public static void main(String[] args) {
-        ParseICD parseICD = new ParseICD();
+        ICD10Parser parseICD = new ICD10Parser();
     }
 }

@@ -8,7 +8,7 @@ public class PatientCase {
 	public PatientCase(int id, String text) {
 		this.id = id;
 		this.text = text;
-		setSentences(text);
+		this.sentences = text.split("\\.");
 	}
 	
 	public int getId() {
@@ -23,12 +23,14 @@ public class PatientCase {
 		return sentences;
 	}
 	
-	public void setSentences(String text) {
-		this.sentences = text.split(".");
-	}
-        
-        public String toString(){
-            return id + ":" + text;
+
+        public String getSentence(int i){
+            return sentences[i];
         }
-	
+        
+        @Override
+        public String toString(){
+            return id + ": " + sentences.length + " sentences";
+        }
+
 }
