@@ -38,4 +38,8 @@ public class DocumentMatch {
         hits.add(doc);
     }
     
+    @Override
+    public String toString(){
+        return id + ", " + sentenceId + ": " + hits;
+    }
 }
