@@ -10,6 +10,7 @@ import no.ntnu.webintelligence.models.ICD10;
 import no.ntnu.webintelligence.parsers.ICD10Parser;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
