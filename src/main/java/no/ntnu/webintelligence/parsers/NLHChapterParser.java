@@ -38,33 +38,34 @@ public class NLHChapterParser {
 
     public NLHChapter readHTMFile(File file) throws IOException {
         Document doc = Jsoup.parse(file, "UTF-8");
-        Elements body = doc.select("body");
+        Elements body = doc.getElementsByClass("seksjon2");
+        String bodyString = body.toString();
+        String bodyResult = Jsoup.parse(bodyString).text();
         String id = file.getName().replaceAll(".htm", "");
+        System.out.println(bodyResult);
         for (Element e : body) {
             //System.out.println(e.getAllElements());
         }
-      String title = "";
+        String title = "";
         Elements docs;
-        if(doc.select("h2") != null){
+        if (doc.select("h2") != null) {
             docs = doc.select("h2");
-        }
-        else{
+        } else {
             docs = doc.select("h1");
         }
-      
+
         for (Element e : docs) {
             int length = id.length();
-           // int ind = e.text().indexOf("Publisert");
+            // int ind = e.text().indexOf("Publisert");
             //if (ind > 0) {
-              //  title = e.text().substring(length + 1, ind);
-                System.out.println(e.text());
-           // }
+            //  title = e.text().substring(length + 1, ind);
+          //  System.out.println(e.text());
+            // }
 
         }
         return new NLHChapter(id, title, "");
 
-        }
-    
+    }
 
     public ArrayList<NLHChapter> getChapters() {
         return chapters;
