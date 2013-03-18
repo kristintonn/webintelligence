@@ -34,6 +34,7 @@ public class Search {
 
     public Search() throws IOException, ParseException {
         index = new Index();
+        index.addICD10();
         parser = new QueryParser(Version.LUCENE_35, "label", index.getAnalyzer());
         reader = IndexReader.open(index.getIndex());
         searcher = new IndexSearcher(reader);
