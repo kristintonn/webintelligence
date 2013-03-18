@@ -59,5 +59,10 @@
             <artifactId>jsoup</artifactId>
             <version>1.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>gov.sandia.foundry</groupId>
+            <artifactId>porter-stemmer</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 </project>

@@ -27,7 +27,6 @@ import org.apache.lucene.util.Version;
  * @author Kristin
  */
 public class Search {
-
     private Index index;
     private IndexSearcher searcher;
     private IndexReader reader;
@@ -35,6 +34,7 @@ public class Search {
 
     public Search() throws IOException, ParseException {
         index = new Index();
+        index.addICD10();
         parser = new QueryParser(Version.LUCENE_35, "label", index.getAnalyzer());
         reader = IndexReader.open(index.getIndex());
         searcher = new IndexSearcher(reader);
@@ -65,7 +65,8 @@ public class Search {
             for (int i = 0; i < pc.getSentences().length; i++) {
                 DocumentMatch match = new DocumentMatch(pc.getId(), i);
                 String queryS = pc.getSentences()[i];
-                if (queryS.length() > 1) {
+                queryS = queryS.trim();
+                if (queryS.length() > 0) {
                     System.out.println("S: " + queryS);
                     
                     ScoreDoc[] hits = search.searchDocument(queryS, 3);
@@ -80,8 +81,10 @@ public class Search {
                 matches.add(match);
             }
         }
-        String queryString = "hjerte";//TODO: Replace with real query
-
+        
+        for (DocumentMatch dm : matches){
+            System.out.println(dm);
+        }
         
     }
 }

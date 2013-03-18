@@ -7,7 +7,10 @@ package no.ntnu.webintelligence.index;
 import java.io.IOException;
 import java.util.ArrayList;
 import no.ntnu.webintelligence.models.ICD10;
+import no.ntnu.webintelligence.models.NLHChapter;
 import no.ntnu.webintelligence.parsers.ICD10Parser;
+import no.ntnu.webintelligence.parsers.NLHChapterParser;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.StopAnalyzer;
@@ -30,21 +33,16 @@ public class Index {
     Directory index;
     Analyzer analyzer;
     IndexWriter writer;
+    IndexWriterConfig config;
 
     public Index() throws IOException {
         analyzer = new StandardAnalyzer(Version.LUCENE_35);
         index = new RAMDirectory(); //TODO: Replace
+        config = new IndexWriterConfig(Version.LUCENE_35, analyzer);
         
-        IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_35, analyzer);
-        writer = new IndexWriter(index, config);
         
-        ICD10Parser parser = new ICD10Parser();
-        ArrayList<ICD10> parsedICDs = parser.getParsedICDs();
-        for (int i = 0; i<parsedICDs.size(); i++){
-            addICD10Document(parsedICDs.get(i));
-        }
-        writer.close();
-        // Skrive ut indeksen
+        
+        /* Skrive ut indeksen
         IndexReader reader = IndexReader.open(index);
         int num = reader.numDocs();
         //System.out.println(num);
@@ -53,18 +51,55 @@ public class Index {
                 Document d = reader.document(i);
                 //System.out.println("d= " + d);
             }
-        }
+        }*/
     }
     
-    public void addICD10Document(ICD10 icd10) throws IOException {
-        Document doc = new Document();
-        doc.add(new Field("id", icd10.getId(), Field.Store.YES, Field.Index.ANALYZED));
-        doc.add(new Field("label", icd10.getLabel() == null ? "" : icd10.getLabel(), Field.Store.YES, Field.Index.ANALYZED));
-        for (String syn : icd10.getSynonyms()) {
-            doc.add(new Field("synonym", syn, Field.Store.YES, Field.Index.ANALYZED));
+    /**
+     * add ICD10 to index
+     */
+    public void addICD10() throws IOException{
+    	writer = new IndexWriter(index, config);
+        
+        ICD10Parser parser = new ICD10Parser();
+        ArrayList<ICD10> parsedICDs = parser.getParsedICDs();
+        for (ICD10 icd10 : parsedICDs){
+        	Document doc = new Document();
+            doc.add(new Field("id", icd10.getId(), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("label", icd10.getLabel() == null ? "" : icd10.getLabel(), Field.Store.YES, Field.Index.ANALYZED));
+            for (String syn : icd10.getSynonyms()) {
+                doc.add(new Field("synonym", syn, Field.Store.YES, Field.Index.ANALYZED));
+            }
+            writer.addDocument(doc);
+            writer.commit();
         }
-        writer.addDocument(doc);
-        writer.commit();
+        writer.close();
+    }
+    
+    /**
+     * add atc to index
+     */
+    public void addATC() throws IOException{
+    	//TODO create
+    }
+    
+    /**
+     * add Legemiddelhåndboka to index
+     */
+    public void addNLMH() throws IOException{
+    	writer = new IndexWriter(index, config);
+    	
+    	NLHChapterParser parser = new NLHChapterParser();
+    	ArrayList<NLHChapter> parsedChapters = parser.getChapters();
+    	for (NLHChapter c : parsedChapters){
+    		Document doc = new Document();
+            doc.add(new Field("id", c.getId() , Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("title", c.getTitle() == null ? "" : c.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("text", c.getText(), Field.Store.YES, Field.Index.ANALYZED));
+            writer.addDocument(doc);
+            writer.commit();
+    	}
+    	
+    	writer.close();
     }
     
     public Analyzer getAnalyzer(){
