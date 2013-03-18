@@ -26,5 +26,9 @@ public class PatientCase {
 	public void setSentences(String text) {
 		this.sentences = text.split(".");
 	}
+        
+        public String toString(){
+            return id + ":" + text;
+        }
 	
 }
