@@ -92,9 +92,6 @@ public class Search {
     			
     		}
     	}
-    	for (DocumentMatch dm : matches){
-            System.out.println(dm);
-        }
     }
 
     public static void main(String[] args) throws IOException, ParseException {

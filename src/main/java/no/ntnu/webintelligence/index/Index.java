@@ -113,6 +113,7 @@ public class Index {
                 doc.add(new Field("text", c.getText(), Field.Store.YES, Field.Index.ANALYZED));
                 writer.addDocument(doc);
                 writer.commit();
+//                System.out.println(c.getText());
                 counter++;
     		}
     		

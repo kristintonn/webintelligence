@@ -63,7 +63,7 @@ public class NLHChapterParser {
             // }
 
         }
-        return new NLHChapter(id, title, "");
+        return new NLHChapter(id, title, bodyResult);
 
     }
 

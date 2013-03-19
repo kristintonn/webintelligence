@@ -29,7 +29,6 @@ public class PatientCaseParser {
         for (int c = 1; c <= 8; c++) {
             String stringText = "";
             fileName = "src/main/resources/cases/case" + c + ".txt";
-
             try {
                 String sCurrentLine;
                 is = new BufferedReader(new FileReader(fileName));
