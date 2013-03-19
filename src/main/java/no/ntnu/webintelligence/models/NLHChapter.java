@@ -30,7 +30,7 @@ public class NLHChapter {
 	}
 	
 	public void setSentences(String text) {
-		this.sentences = text.split(".");
+		this.sentences = text.split("\\.");
 	}
 	
 	

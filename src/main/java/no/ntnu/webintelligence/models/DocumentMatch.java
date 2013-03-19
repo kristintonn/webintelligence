@@ -12,17 +12,17 @@ import org.apache.lucene.document.Document;
  * @author Kristin
  */
 public class DocumentMatch {
-    int id;
+    String id;
     int sentenceId;
     ArrayList<Document> hits;
     
-    public DocumentMatch(int id, int sentenceId){
+    public DocumentMatch(String id, int sentenceId){
         this.id = id;
         this.sentenceId = sentenceId;
         hits = new ArrayList<Document>();
     }
     
-    public int getID(){
+    public String getID(){
         return id;
     }
     

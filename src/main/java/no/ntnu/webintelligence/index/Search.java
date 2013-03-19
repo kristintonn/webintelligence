@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.webintelligence.models.DocumentMatch;
+import no.ntnu.webintelligence.models.NLHChapter;
 import no.ntnu.webintelligence.models.PatientCase;
+import no.ntnu.webintelligence.parsers.NLHChapterParser;
 import no.ntnu.webintelligence.parsers.PatientCaseParser;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.FieldInvertState;
@@ -83,7 +85,7 @@ public class Search {
         ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
     	for(PatientCase c : caseList){
     		for(int j=0; j < c.getSentences().length; j++){
-    			DocumentMatch match = new DocumentMatch(c.getId(), j);
+    			DocumentMatch match = new DocumentMatch(Integer.toString(c.getId()), j);
     			String s = c.getSentences()[j];
     			s = s.trim();
     			if(s.length() > 0){
@@ -113,8 +115,35 @@ public class Search {
         ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
         for (PatientCase pc : cases.getParsedCases()) {
             for (int i = 0; i < pc.getSentences().length; i++) {
-                DocumentMatch match = new DocumentMatch(pc.getId(), i);
+                DocumentMatch match = new DocumentMatch(Integer.toString(pc.getId()), i);
                 String queryS = pc.getSentences()[i];
+                queryS = queryS.trim();
+                if (queryS.length() > 0) {
+                    //System.out.println("S: " + queryS);       
+                    ScoreDoc[] hits = this.searchDocument(queryS, 3);
+                    //System.out.println("Found " + hits.length + " hits.");
+                    for (int j = 0; j < hits.length; ++j) {
+                        int docId = hits[j].doc;
+                        Document d = this.getIndexSearcher().doc(docId);
+                        //System.out.println((j + 1) + ". " + d.get("id") + "\t" + d.get("label"));
+                        match.addHit(d);
+                    }
+                }
+                matches.add(match);
+            }
+        }
+        return matches;
+}
+    
+    public ArrayList<DocumentMatch> searchNLHChapters() throws ParseException, IOException{
+    
+        NLHChapterParser parser = new NLHChapterParser();
+    	//search.searchTherapyAndDrugChapterInNLMH(cases.getParsedCases());
+        ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
+        for (NLHChapter chapter : parser.getChapters()) {
+            for (int i = 0; i < chapter.getSentences().length; i++) {
+                DocumentMatch match = new DocumentMatch(chapter.getId(), i);
+                String queryS = chapter.getSentences()[i];
                 queryS = queryS.trim();
                 if (queryS.length() > 0) {
                     //System.out.println("S: " + queryS);       

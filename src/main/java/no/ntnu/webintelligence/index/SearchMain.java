@@ -30,6 +30,10 @@ public class SearchMain {
         System.out.println(ICDmatches);
         ArrayList<DocumentMatch> ATCmatches = search1.searchPatientCases();
         System.out.println(ATCmatches);
+        ArrayList<DocumentMatch> ICDmatches1 = search.searchNLHChapters();
+        System.out.println(ICDmatches1);
+        ArrayList<DocumentMatch> ATCmatches1 = search1.searchNLHChapters();
+        System.out.println(ATCmatches1);
     }
    
     public static void main(String[] args) throws IOException, ParseException {
