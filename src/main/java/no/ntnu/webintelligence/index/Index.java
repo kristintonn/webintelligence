@@ -6,8 +6,11 @@ package no.ntnu.webintelligence.index;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import no.ntnu.webintelligence.models.ATC;
 import no.ntnu.webintelligence.models.ICD10;
 import no.ntnu.webintelligence.models.NLHChapter;
+import no.ntnu.webintelligence.parsers.ATCParser;
 import no.ntnu.webintelligence.parsers.ICD10Parser;
 import no.ntnu.webintelligence.parsers.NLHChapterParser;
 
@@ -79,7 +82,17 @@ public class Index {
      * add atc to index
      */
     public void addATC() throws IOException{
-    	//TODO create
+    	writer = new IndexWriter(index, config);
+    	
+    	ATCParser parser = new ATCParser();
+    	ArrayList<ATC> parsedATCs = parser.getParsedATCs();
+    	for (ATC c : parsedATCs){
+    		Document doc = new Document();
+            doc.add(new Field("id", c.getId() , Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("title", c.getLabel() == null ? "" : c.getLabel(), Field.Store.YES, Field.Index.ANALYZED));
+            writer.addDocument(doc);
+            writer.commit();
+    	}
     }
     
     /**
