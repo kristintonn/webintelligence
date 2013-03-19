@@ -37,7 +37,7 @@ public class NLHChapterParser {
     }
 
     public NLHChapter readHTMFile(File file) throws IOException {
-        Document doc = Jsoup.parse(file, "UTF-8");
+        Document doc = Jsoup.parse(file, "iso-8859-1");
         Elements body = doc.getElementsByClass("seksjon2");
         String bodyString = body.toString();
         String bodyResult = Jsoup.parse(bodyString).text();
