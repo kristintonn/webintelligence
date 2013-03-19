@@ -42,31 +42,31 @@ public class Index {
         analyzer = new StandardAnalyzer(Version.LUCENE_35);
         index = new RAMDirectory(); //TODO: Replace
         config = new IndexWriterConfig(Version.LUCENE_35, analyzer);
-        
-        
-        
+
+
+
         /* Skrive ut indeksen
-        IndexReader reader = IndexReader.open(index);
-        int num = reader.numDocs();
-        //System.out.println(num);
-        for (int i = 0; i<num; i++){
-            if (!reader.isDeleted(i)){
-                Document d = reader.document(i);
-                //System.out.println("d= " + d);
-            }
-        }*/
+         IndexReader reader = IndexReader.open(index);
+         int num = reader.numDocs();
+         //System.out.println(num);
+         for (int i = 0; i<num; i++){
+         if (!reader.isDeleted(i)){
+         Document d = reader.document(i);
+         //System.out.println("d= " + d);
+         }
+         }*/
     }
-    
+
     /**
      * add ICD10 to index
      */
-    public void addICD10() throws IOException{
-    	writer = new IndexWriter(index, config);
-        
+    public void addICD10() throws IOException {
+        writer = new IndexWriter(index, config);
+
         ICD10Parser parser = new ICD10Parser();
         ArrayList<ICD10> parsedICDs = parser.getParsedICDs();
-        for (ICD10 icd10 : parsedICDs){
-        	Document doc = new Document();
+        for (ICD10 icd10 : parsedICDs) {
+            Document doc = new Document();
             doc.add(new Field("id", icd10.getId(), Field.Store.YES, Field.Index.ANALYZED));
             doc.add(new Field("label", icd10.getLabel() == null ? "" : icd10.getLabel(), Field.Store.YES, Field.Index.ANALYZED));
             for (String syn : icd10.getSynonyms()) {
@@ -77,63 +77,63 @@ public class Index {
         }
         writer.close();
     }
-    
+
     /**
      * add atc to index
      */
-    public void addATC() throws IOException{
-    	writer = new IndexWriter(index, config);
-    	
-    	ATCParser parser = new ATCParser();
-    	ArrayList<ATC> parsedATCs = parser.getParsedATCs();
-    	for (ATC c : parsedATCs){
-    		Document doc = new Document();
-            doc.add(new Field("id", c.getId() , Field.Store.YES, Field.Index.ANALYZED));
-            doc.add(new Field("title", c.getLabel() == null ? "" : c.getLabel(), Field.Store.YES, Field.Index.ANALYZED));
+    public void addATC() throws IOException {
+        writer = new IndexWriter(index, config);
+
+        ATCParser parser = new ATCParser();
+        ArrayList<ATC> parsedATCs = parser.getParsedATCs();
+        for (ATC c : parsedATCs) {
+            Document doc = new Document();
+            doc.add(new Field("id", c.getId(), Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("label", c.getLabel() == null ? "" : c.getLabel(), Field.Store.YES, Field.Index.ANALYZED));
             writer.addDocument(doc);
             writer.commit();
-    	}
+        }
     }
-    
+
     /**
      * add Legemiddelhåndboka to index
-     * @param TherapyAndDrugChaptersOnly true if only therapy and drug chapters should be included, false if all chapters is to be included.
+     *
+     * @param TherapyAndDrugChaptersOnly true if only therapy and drug chapters
+     * should be included, false if all chapters is to be included.
      */
-    public void addNLMH(boolean TherapyAndDrugChaptersOnly) throws IOException{
-    	writer = new IndexWriter(index, config);
-    	
-    	NLHChapterParser parser = new NLHChapterParser();
-    	ArrayList<NLHChapter> parsedChapters = parser.getChapters();
-    	int counter = 0;
-    	for (NLHChapter c : parsedChapters){
-    		if(!TherapyAndDrugChaptersOnly || c.getId().startsWith("L") || c.getId().startsWith("T")){
-    			Document doc = new Document();
-                doc.add(new Field("id", c.getId() , Field.Store.YES, Field.Index.ANALYZED));
+    public void addNLMH(boolean TherapyAndDrugChaptersOnly) throws IOException {
+        writer = new IndexWriter(index, config);
+
+        NLHChapterParser parser = new NLHChapterParser();
+        ArrayList<NLHChapter> parsedChapters = parser.getChapters();
+        int counter = 0;
+        for (NLHChapter c : parsedChapters) {
+            if (!TherapyAndDrugChaptersOnly || c.getId().startsWith("L") || c.getId().startsWith("T")) {
+                Document doc = new Document();
+                doc.add(new Field("id", c.getId(), Field.Store.YES, Field.Index.ANALYZED));
                 doc.add(new Field("title", c.getTitle() == null ? "" : c.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
                 doc.add(new Field("text", c.getText(), Field.Store.YES, Field.Index.ANALYZED));
                 writer.addDocument(doc);
                 writer.commit();
 //                System.out.println(c.getText());
                 counter++;
-    		}
-    		
-    	}
-    	System.out.println("added " + counter + " chapters!");
-    	writer.close();
+            }
+
+        }
+        System.out.println("added " + counter + " chapters!");
+        writer.close();
     }
-    
-    
-    public Analyzer getAnalyzer(){
+
+    public Analyzer getAnalyzer() {
         return analyzer;
     }
-    
-    public Directory getIndex(){
+
+    public Directory getIndex() {
         return index;
     }
-    
+
     //TODO: Method for adding ATC documents
-    
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         Index index = new Index();
     }
 }

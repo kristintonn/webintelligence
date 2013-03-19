@@ -36,13 +36,25 @@ public class Search {
     private final int HITS_PER_PAGE = 3;
 
     public Search() throws IOException, ParseException {
-       /* index = new Index();
+        
+    }
+
+    public void searchICD10() throws IOException{
+        index = new Index();
         index.addICD10();
         parser = new QueryParser(Version.LUCENE_35, "label", index.getAnalyzer());
         reader = IndexReader.open(index.getIndex());
-        searcher = new IndexSearcher(reader);*/
+        searcher = new IndexSearcher(reader);
     }
-
+    
+    public void searchATC() throws IOException{
+        index = new Index();
+        index.addATC();
+        parser = new QueryParser(Version.LUCENE_35, "label", index.getAnalyzer());
+        reader = IndexReader.open(index.getIndex());
+        searcher = new IndexSearcher(reader);
+    }
+    
     ScoreDoc[] searchDocument(String queryString, int hitsPerPage) throws ParseException, IOException {
         Query query = parser.parse(queryString);
         searcher.setSimilarity(new DefaultSimilarity() {
@@ -78,11 +90,11 @@ public class Search {
     				System.out.println("S: " + s);
     				
     				ScoreDoc[] hits = searchDocument(s, HITS_PER_PAGE);
-    				System.out.println("Found " + hits.length + " hits");
+    				//System.out.println("Found " + hits.length + " hits");
     				for(int i = 0; i < hits.length; i++){
     					int docId = hits[i].doc;
     					Document d = searcher.doc(docId);
-    					System.out.println((i + 1) + ". " + d.get("id") + "\t" + d.get("title"));
+    					//System.out.println((i + 1) + ". " + d.get("id") + "\t" + d.get("title"));
     					match.addHit(d);
     				}
     				if(match.getHits().size() > 0){
@@ -93,15 +105,11 @@ public class Search {
     		}
     	}
     }
-
-    public static void main(String[] args) throws IOException, ParseException {
-    	Search search = new Search();
-    	PatientCaseParser cases = new PatientCaseParser();
-
-    	search.searchTherapyAndDrugChapterInNLMH(cases.getParsedCases());
-    	/*
-        Search search = new Search();
+    
+    public ArrayList<DocumentMatch> searchPatientCases() throws ParseException, IOException{
+    
         PatientCaseParser cases = new PatientCaseParser();
+    	//search.searchTherapyAndDrugChapterInNLMH(cases.getParsedCases());
         ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
         for (PatientCase pc : cases.getParsedCases()) {
             for (int i = 0; i < pc.getSentences().length; i++) {
@@ -109,24 +117,23 @@ public class Search {
                 String queryS = pc.getSentences()[i];
                 queryS = queryS.trim();
                 if (queryS.length() > 0) {
-                    System.out.println("S: " + queryS);
-                    
-                    ScoreDoc[] hits = search.searchDocument(queryS, 3);
-                    System.out.println("Found " + hits.length + " hits.");
+                    //System.out.println("S: " + queryS);       
+                    ScoreDoc[] hits = this.searchDocument(queryS, 3);
+                    //System.out.println("Found " + hits.length + " hits.");
                     for (int j = 0; j < hits.length; ++j) {
                         int docId = hits[j].doc;
-                        Document d = search.getIndexSearcher().doc(docId);
-                        System.out.println((j + 1) + ". " + d.get("id") + "\t" + d.get("label"));
+                        Document d = this.getIndexSearcher().doc(docId);
+                        //System.out.println((j + 1) + ". " + d.get("id") + "\t" + d.get("label"));
                         match.addHit(d);
                     }
                 }
                 matches.add(match);
             }
         }
-        
-        for (DocumentMatch dm : matches){
-            System.out.println(dm);
-        }
-        */
+        return matches;
+}
+
+    public static void main(String[] args) throws IOException, ParseException {
+    	
     }
 }
