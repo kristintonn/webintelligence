@@ -30,9 +30,9 @@ public class NLHChapterParser {
         File dir = new File("src/main/resources/nlh");
         File[] files = dir.listFiles();
         for (int i = 0; i < files.length; i++) {
-            System.out.println(files[i].getName().replaceAll(".htm", ""));
+            //System.out.println(files[i].getName().replaceAll(".htm", ""));
             NLHChapter chapter = readHTMFile(files[i]);
-            //chapters.add(chapter);
+            chapters.add(chapter);
         }
     }
 
@@ -42,7 +42,7 @@ public class NLHChapterParser {
         String bodyString = body.toString();
         String bodyResult = Jsoup.parse(bodyString).text();
         String id = file.getName().replaceAll(".htm", "");
-        System.out.println(bodyResult);
+        //System.out.println(bodyResult);
         for (Element e : body) {
             //System.out.println(e.getAllElements());
         }

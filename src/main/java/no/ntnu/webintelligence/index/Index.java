@@ -97,23 +97,30 @@ public class Index {
     
     /**
      * add Legemiddelhåndboka to index
+     * @param TherapyAndDrugChaptersOnly true if only therapy and drug chapters should be included, false if all chapters is to be included.
      */
-    public void addNLMH() throws IOException{
+    public void addNLMH(boolean TherapyAndDrugChaptersOnly) throws IOException{
     	writer = new IndexWriter(index, config);
     	
     	NLHChapterParser parser = new NLHChapterParser();
     	ArrayList<NLHChapter> parsedChapters = parser.getChapters();
+    	int counter = 0;
     	for (NLHChapter c : parsedChapters){
-    		Document doc = new Document();
-            doc.add(new Field("id", c.getId() , Field.Store.YES, Field.Index.ANALYZED));
-            doc.add(new Field("title", c.getTitle() == null ? "" : c.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
-            doc.add(new Field("text", c.getText(), Field.Store.YES, Field.Index.ANALYZED));
-            writer.addDocument(doc);
-            writer.commit();
+    		if(!TherapyAndDrugChaptersOnly || c.getId().startsWith("L") || c.getId().startsWith("T")){
+    			Document doc = new Document();
+                doc.add(new Field("id", c.getId() , Field.Store.YES, Field.Index.ANALYZED));
+                doc.add(new Field("title", c.getTitle() == null ? "" : c.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
+                doc.add(new Field("text", c.getText(), Field.Store.YES, Field.Index.ANALYZED));
+                writer.addDocument(doc);
+                writer.commit();
+                counter++;
+    		}
+    		
     	}
-    	
+    	System.out.println("added " + counter + " chapters!");
     	writer.close();
     }
+    
     
     public Analyzer getAnalyzer(){
         return analyzer;
