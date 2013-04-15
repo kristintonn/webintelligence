@@ -144,10 +144,11 @@ public class Search {
             for (int i = 0; i < chapter.getSentences().length; i++) {
                 DocumentMatch match = new DocumentMatch(chapter.getId(), i);
                 String queryS = chapter.getSentences()[i];
-                queryS = queryS.trim();
-                if (queryS.length() > 0) {
+                String escaped = QueryParser.escape(queryS);
+                escaped = escaped.trim();
+                if (escaped.length() > 0) {
                     //System.out.println("S: " + queryS);       
-                    ScoreDoc[] hits = this.searchDocument(queryS, 3);
+                    ScoreDoc[] hits = this.searchDocument(escaped, 3);
                     //System.out.println("Found " + hits.length + " hits.");
                     for (int j = 0; j < hits.length; ++j) {
                         int docId = hits[j].doc;

@@ -10,7 +10,7 @@ public class NLHChapter {
 		this.id = id;
 		this.title = title;
 		this.text = text;
-		setSentences(text);
+		this.sentences = text.split("\\.");
 	}
 
 	public String getId() {
@@ -33,6 +33,9 @@ public class NLHChapter {
 		this.sentences = text.split("\\.");
 	}
 	
-	
+        @Override
+	public String toString(){
+            return id + " " + title + "\n" + text;
+        }
 	
 }

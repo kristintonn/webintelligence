@@ -27,13 +27,16 @@ public class SearchMain {
         search.searchICD10();
         search1.searchATC();
         ArrayList<DocumentMatch> ICDmatches = search.searchPatientCases();
-        System.out.println(ICDmatches);
+        for(DocumentMatch d : ICDmatches){
+            System.out.println(d.getID() + ", " + d.getSentenceId() + "\n" + d.getHits());
+        }
+        System.out.println(ICDmatches.size());
         ArrayList<DocumentMatch> ATCmatches = search1.searchPatientCases();
-        System.out.println(ATCmatches);
+        System.out.println(ATCmatches.size());
         ArrayList<DocumentMatch> ICDmatches1 = search.searchNLHChapters();
-        System.out.println(ICDmatches1);
+        System.out.println(ICDmatches1.size());
         ArrayList<DocumentMatch> ATCmatches1 = search1.searchNLHChapters();
-        System.out.println(ATCmatches1);
+        System.out.println(ATCmatches1.size());
     }
    
     public static void main(String[] args) throws IOException, ParseException {
