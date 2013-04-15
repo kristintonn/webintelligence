@@ -48,11 +48,15 @@ public class NLHChapterParser {
         }
         String title = "";
         Elements docs;
-        if (doc.select("h2") != null) {
+        if (doc.select("h3") != null) {
+            docs = doc.select("h3");
+        }
+        else if (doc.select("h2") != null) {
             docs = doc.select("h2");
         } else {
             docs = doc.select("h1");
         }
+        title = docs.text();
 
         for (Element e : docs) {
             int length = id.length();
