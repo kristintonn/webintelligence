@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import no.ntnu.webintelligence.models.ATC;
-import no.ntnu.webintelligence.models.ICD10;
 
 /**
  *
