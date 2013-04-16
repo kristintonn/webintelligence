@@ -134,7 +134,7 @@ public class NLHChapterParser {
         NLHChapterParser parser = new NLHChapterParser();
         ArrayList<NLHChapter> chapters = parser.getChapters();
         for (NLHChapter ch : chapters) {
-            System.out.println("Ja: " + ch);
+            //System.out.println("Ja: " + ch);
         }
     }
 }
