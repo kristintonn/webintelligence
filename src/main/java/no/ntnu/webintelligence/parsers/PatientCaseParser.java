@@ -5,12 +5,10 @@
 package no.ntnu.webintelligence.parsers;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import no.ntnu.webintelligence.models.ICD10;
 import no.ntnu.webintelligence.models.PatientCase;
 
 /**
@@ -36,15 +34,10 @@ public class PatientCaseParser {
                     stringText += sCurrentLine + " ";
                 }
                 stringText = removeStopWords(stringText);
-                //lage text
-                PatientCase caseText = new PatientCase(c, stringText);
-                parsedCases.add(caseText);
+                PatientCase pcase = new PatientCase(c, stringText);
+                parsedCases.add(pcase);
             } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
-        for (int i = 0; i < parsedCases.size(); i++) {
-            //System.out.println(parsedCases.get(i));
         }
     }
 
@@ -53,7 +46,7 @@ public class PatientCaseParser {
         reader = new BufferedReader(new FileReader("src/main/resources/stopwords.txt"));
         String sCurrentLine;
         while ((sCurrentLine = reader.readLine()) != null) {
-            in = in.replaceAll(" " + sCurrentLine + " ", " ");
+            in = in.replaceAll(" " + sCurrentLine + " ", " "); //TODO: Støtte for stor forbokstav?
         }
         return in;
     }
