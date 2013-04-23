@@ -18,9 +18,11 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
@@ -71,6 +73,38 @@ public class Index {
 		}
 		writer.close();
 	}
+	
+	public void addICD10AndATC() throws IOException{
+		writer = new IndexWriter(index, config);
+
+		ICD10Parser parser = new ICD10Parser();
+		ArrayList<ICD10> parsedICDs = parser.getParsedICDs();
+		for (ICD10 icd10 : parsedICDs) {
+			Document doc = new Document();
+			doc.add(new Field("id", icd10.getId(), Field.Store.YES,
+					Field.Index.ANALYZED));
+			doc.add(new Field("label", icd10.getLabel() == null ? "" : icd10
+					.getLabel(), Field.Store.YES, Field.Index.ANALYZED));
+			for (String syn : icd10.getSynonyms()) {
+				doc.add(new Field("synonym", syn, Field.Store.YES,
+						Field.Index.ANALYZED));
+			}
+			writer.addDocument(doc);
+		}
+		ATCParser parser2 = new ATCParser();
+		ArrayList<ATC> parsedATCs = parser2.getParsedATCs();
+		for (ATC c : parsedATCs) {
+			Document doc = new Document();
+			doc.add(new Field("id", c.getId(), Field.Store.YES,
+					Field.Index.ANALYZED));
+			doc.add(new Field("label",
+					c.getLabel() == null ? "" : c.getLabel(), Field.Store.YES,
+					Field.Index.ANALYZED));
+			writer.addDocument(doc);
+			writer.commit();
+		}
+		writer.close();
+	}
 
 	/**
 	 * add atc to index
@@ -90,6 +124,7 @@ public class Index {
 			writer.addDocument(doc);
 			writer.commit();
 		}
+		writer.close();
 	}
 
 	/**

@@ -34,7 +34,7 @@ public class Search {
 	private IndexSearcher searcher;
 	private IndexReader reader;
 	private QueryParser parser;
-	private final int HITS_PER_PAGE = 3;
+	private final int HITS_PER_PAGE = 20;
 
 	public Search() throws IOException, ParseException {
 
@@ -91,6 +91,15 @@ public class Search {
 	public void searchATC() throws IOException {
 		index = new Index();
 		index.addATC();
+		parser = new QueryParser(Version.LUCENE_35, "label",
+				index.getAnalyzer());
+		reader = IndexReader.open(index.getIndex());
+		searcher = new IndexSearcher(reader);
+	}
+	
+	public void searchICD10AndATC() throws IOException{
+		index = new Index();
+		index.addICD10AndATC();
 		parser = new QueryParser(Version.LUCENE_35, "label",
 				index.getAnalyzer());
 		reader = IndexReader.open(index.getIndex());
@@ -168,12 +177,12 @@ public class Search {
 				if (queryS.length() > 0) {
 					// System.out.println("S: " + queryS);
 					ScoreDoc[] hits = this.searchDocument(queryS, 3);
-					System.out.println("Found " + hits.length + " hits.");
+//					System.out.println("Found " + hits.length + " hits.");
 					for (int j = 0; j < hits.length; ++j) {
 						int docId = hits[j].doc;
-						System.out.println("ID: " + docId);
+//						System.out.println("ID: " + docId);
 						Float score = new Float(hits[j].score);
-						System.out.println("SCORE: " + hits[j].score);
+//						System.out.println("SCORE: " + hits[j].score);
 						Document d = this.getIndexSearcher().doc(docId);
 						// System.out.println((j + 1) + ". " + d.get("id") +
 						// "\t" + d.get("label"));
