@@ -8,7 +8,7 @@ public class StripHTML extends HTMLEditorKit.ParserCallback{
 	StringBuffer s;
 	
 	public StripHTML() {
-		// TODO Auto-generated constructor stub
+	
 	}
 
     public void parse(Reader in) throws IOException {

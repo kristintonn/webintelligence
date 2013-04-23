@@ -5,6 +5,8 @@
 package no.ntnu.webintelligence.models;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.lucene.document.Document;
 
 /**
@@ -14,12 +16,12 @@ import org.apache.lucene.document.Document;
 public class DocumentMatch {
     String id;
     int sentenceId;
-    ArrayList<Document> hits;
+    List<DocumentHit> hits;
     
     public DocumentMatch(String id, int sentenceId){
         this.id = id;
         this.sentenceId = sentenceId;
-        hits = new ArrayList<Document>();
+        hits = new ArrayList<DocumentHit>();
     }
     
     public String getID(){
@@ -30,12 +32,16 @@ public class DocumentMatch {
         return sentenceId;
     }
     
-    public ArrayList<Document> getHits(){
+    public List<DocumentHit> getHits(){
         return hits;
     }
     
-    public void addHit(Document doc){
-        hits.add(doc);
+    public void setHits(List<DocumentHit> hits){
+    	this.hits = new ArrayList<DocumentHit>(hits);
+    }
+    
+    public void addHit(Float score, Document doc){
+        hits.add(new DocumentHit(score, doc));
     }
     
     @Override

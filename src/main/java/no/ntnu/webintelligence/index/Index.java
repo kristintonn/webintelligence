@@ -8,25 +8,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import no.ntnu.webintelligence.models.ATC;
-import no.ntnu.webintelligence.models.DocumentMatch;
 import no.ntnu.webintelligence.models.ICD10;
 import no.ntnu.webintelligence.models.NLHChapter;
 import no.ntnu.webintelligence.parsers.ATCParser;
 import no.ntnu.webintelligence.parsers.ICD10Parser;
 import no.ntnu.webintelligence.parsers.NLHChapterParser;
 
-import org.apache.lucene.document.Document;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
@@ -138,28 +132,26 @@ public class Index {
 	 * @param results
 	 * @throws IOException
 	 */
-	public void addICD10InNLH(ArrayList<DocumentMatch> results)
-			throws IOException {
-		writer = new IndexWriter(index, config);
-		for (DocumentMatch dm : results) {
-			if(!dm.getHits().isEmpty()){
-				Document document = new Document();
-				document.add(new Field("id", dm.getID() + ":" + dm.getSentenceId(), Field.Store.YES,
-						Field.Index.ANALYZED));
-				
-				String idc10 = "";
-				for (Document d : dm.getHits()) {
-					idc10 += d.get("id") + " ";
-				}
-				document.add(new Field("label", idc10, Field.Store.YES, Field.Index.ANALYZED));
-				System.out.println("ADDING: " + dm.getID() + " - " + idc10);
-				writer.addDocument(document);
-				writer.commit();
-			}
-			
-		}
-		writer.close();
-	}
+//	public void addICD10InNLH(ArrayList<DocumentMatch> results)
+//			throws IOException {
+//		writer = new IndexWriter(index, config);
+//		for (DocumentMatch dm : results) {
+//			if(!dm.getHits().isEmpty()){
+//				Document document = new Document();
+//				document.add(new Field("id", dm.getID() + ":" + dm.getSentenceId(), Field.Store.YES,
+//						Field.Index.ANALYZED));
+//				
+//				String idc10 = "";
+//				for (Document d : dm.getHits()) {
+//					idc10 += d.get("id") + " ";
+//				}
+//				document.add(new Field("label", idc10, Field.Store.YES, Field.Index.ANALYZED));
+//				writer.addDocument(document);
+//				writer.commit();
+//			}
+//		}
+//		writer.close();
+//	}
 
 	public Analyzer getAnalyzer() {
 		return analyzer;
@@ -170,7 +162,5 @@ public class Index {
 	}
 
 	// TODO: Method for adding ATC documents
-	public static void main(String[] args) throws IOException {
-		Index index = new Index();
-	}
+
 }

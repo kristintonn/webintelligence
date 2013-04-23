@@ -13,8 +13,8 @@ import no.ntnu.webintelligence.models.NLHChapter;
 import no.ntnu.webintelligence.models.PatientCase;
 import no.ntnu.webintelligence.parsers.NLHChapterParser;
 import no.ntnu.webintelligence.parsers.PatientCaseParser;
+
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.FieldInvertState;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -22,7 +22,6 @@ import org.apache.lucene.search.DefaultSimilarity;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Similarity;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.util.Version;
 
@@ -41,45 +40,44 @@ public class Search {
 
 	}
 	
-	public void setResultIndex(ArrayList<DocumentMatch> results) throws IOException{
-		index = new Index();
-		index.addICD10InNLH(results);
-		
-		
-		parser = new QueryParser(Version.LUCENE_35, "label",
-				index.getAnalyzer());
-		reader = IndexReader.open(index.getIndex());
-		searcher = new IndexSearcher(reader);
-	}
+//	public void setResultIndex(ArrayList<DocumentMatch> results) throws IOException{
+//		index = new Index();
+//		index.addICD10InNLH(results);
+//		
+//		
+//		parser = new QueryParser(Version.LUCENE_35, "label",
+//				index.getAnalyzer());
+//		reader = IndexReader.open(index.getIndex());
+//		searcher = new IndexSearcher(reader);
+//	}
 
-	public ArrayList<DocumentMatch> searchInResults(DocumentMatch dm) throws IOException, ParseException {
-
-		ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
-		for (Document d : dm.getHits()) {
-			DocumentMatch match = new DocumentMatch(dm.getID(), dm.getSentenceId());
-			String s = d.get("id");
-			System.out.println("query: " + s);
-			s = s.trim();
-			if (s.length() > 0) {
-
-				ScoreDoc[] hits = searchDocument(s, HITS_PER_PAGE);
-				 System.out.println("Found " + hits.length + " hits");
-				
-				for (int i = 0; i < hits.length; i++) {
-					int docId = hits[i].doc;
-					
-					Document document = searcher.doc(docId);
-					// System.out.println((i + 1) + ". " + d.get("id") + "\t" +
-					// d.get("title"));
-					match.addHit(document);
-				}
-				if (match.getHits().size() > 0) {
-					matches.add(match);
-				}
-			}
-		}
-		return matches;
-	}
+//	public ArrayList<DocumentMatch> searchInResults(DocumentMatch dm) throws IOException, ParseException {
+//
+//		ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
+//		for (Document d : dm.getHits()) {
+//			DocumentMatch match = new DocumentMatch(dm.getID(), dm.getSentenceId());
+//			String s = d.get("id");
+//			s = s.trim();
+//			if (s.length() > 0) {
+//
+//				ScoreDoc[] hits = searchDocument(s, HITS_PER_PAGE);
+//				 System.out.println("Found " + hits.length + " hits");
+//				
+//				for (int i = 0; i < hits.length; i++) {
+//					int docId = hits[i].doc;
+//					Float score = new Float(hits[i].score);
+//					Document document = searcher.doc(docId);
+//					// System.out.println((i + 1) + ". " + d.get("id") + "\t" +
+//					// d.get("title"));
+//					match.addHit(document);
+//				}
+//				if (match.getHits().size() > 0) {
+//					matches.add(match);
+//				}
+//			}
+//		}
+//		return matches;
+//	}
 
 	public void searchICD10() throws IOException {
 		index = new Index();
@@ -140,10 +138,11 @@ public class Search {
 					// System.out.println("Found " + hits.length + " hits");
 					for (int i = 0; i < hits.length; i++) {
 						int docId = hits[i].doc;
+						Float score = new Float(hits[i].score);
 						Document d = searcher.doc(docId);
 						// System.out.println((i + 1) + ". " + d.get("id") +
 						// "\t" + d.get("title"));
-						match.addHit(d);
+						match.addHit(score, d);
 					}
 					if (match.getHits().size() > 0) {
 						matches.add(match);
@@ -169,13 +168,16 @@ public class Search {
 				if (queryS.length() > 0) {
 					// System.out.println("S: " + queryS);
 					ScoreDoc[] hits = this.searchDocument(queryS, 3);
-					// System.out.println("Found " + hits.length + " hits.");
+					System.out.println("Found " + hits.length + " hits.");
 					for (int j = 0; j < hits.length; ++j) {
 						int docId = hits[j].doc;
+						System.out.println("ID: " + docId);
+						Float score = new Float(hits[j].score);
+						System.out.println("SCORE: " + hits[j].score);
 						Document d = this.getIndexSearcher().doc(docId);
 						// System.out.println((j + 1) + ". " + d.get("id") +
 						// "\t" + d.get("label"));
-						match.addHit(d);
+						match.addHit(score, d);
 					}
 				}
 				matches.add(match);
@@ -202,10 +204,11 @@ public class Search {
 					// System.out.println("Found " + hits.length + " hits.");
 					for (int j = 0; j < hits.length; ++j) {
 						int docId = hits[j].doc;
+						Float score = new Float(hits[j].score);
 						Document d = this.getIndexSearcher().doc(docId);
 						// System.out.println((j + 1) + ". " + d.get("id") +
 						// "\t" + d.get("label"));
-						match.addHit(d);
+						match.addHit(score, d);
 					}
 				}
 				matches.add(match);
