@@ -291,7 +291,7 @@ public class SearchMain {
 						if(hits.containsKey(chapters.get(k).getID())){
 							/* Chapter has been found for another term, this should give added score */
 							Float value = hits.get(chapters.get(k).getID());
-							value = new Float(value+matrix[k][j]);
+							value = new Float(value+matrix[k][j]); //TODO HOW TO CALCULATE THIS?!
 						}else{
 							hits.put(chapters.get(k).getID(), matrix[k][j]); 
 						}
