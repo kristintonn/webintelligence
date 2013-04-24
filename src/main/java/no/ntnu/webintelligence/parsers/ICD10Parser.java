@@ -118,7 +118,4 @@ public class ICD10Parser {
         return parsedICDs;
     }
     
-    public static void main(String[] args) {
-        ICD10Parser parseICD = new ICD10Parser();
-    }
 }

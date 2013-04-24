@@ -73,7 +73,4 @@ public class PatientCaseParser {
         return parsedCases;
     }
 
-    public static void main(String[] args) {
-        PatientCaseParser parseCase = new PatientCaseParser();
-    }
 }

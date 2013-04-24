@@ -79,34 +79,9 @@ public class Search {
 //		return matches;
 //	}
 
-	public void searchICD10() throws IOException {
-		index = new Index();
-		index.addICD10();
-		parser = new QueryParser(Version.LUCENE_35, "label",
-				index.getAnalyzer());
-		reader = IndexReader.open(index.getIndex());
-		searcher = new IndexSearcher(reader);
-	}
 
-	public void searchATC() throws IOException {
-		index = new Index();
-		index.addATC();
-		parser = new QueryParser(Version.LUCENE_35, "label",
-				index.getAnalyzer());
-		reader = IndexReader.open(index.getIndex());
-		searcher = new IndexSearcher(reader);
-	}
-	
-	public void searchICD10AndATC() throws IOException{
-		index = new Index();
-		index.addICD10AndATC();
-		parser = new QueryParser(Version.LUCENE_35, "label",
-				index.getAnalyzer());
-		reader = IndexReader.open(index.getIndex());
-		searcher = new IndexSearcher(reader);
-	}
 
-	ScoreDoc[] searchDocument(String queryString, int hitsPerPage)
+	private ScoreDoc[] searchDocument(String queryString, int hitsPerPage)
 			throws ParseException, IOException {
 		Query query = parser.parse(queryString);
 		searcher.setSimilarity(new DefaultSimilarity() {
@@ -124,7 +99,36 @@ public class Search {
 	public IndexSearcher getIndexSearcher() {
 		return searcher;
 	}
+	
+	public void indexICD10() throws IOException {
+		index = new Index();
+		index.addICD10();
+		parser = new QueryParser(Version.LUCENE_35, "label",
+				index.getAnalyzer());
+		reader = IndexReader.open(index.getIndex());
+		searcher = new IndexSearcher(reader);
+	}
 
+	public void indexATC() throws IOException {
+		index = new Index();
+		index.addATC();
+		parser = new QueryParser(Version.LUCENE_35, "label",
+				index.getAnalyzer());
+		reader = IndexReader.open(index.getIndex());
+		searcher = new IndexSearcher(reader);
+	}
+	
+	public void indexICD10AndATC() throws IOException{
+		index = new Index();
+		index.addICD10AndATC();
+		parser = new QueryParser(Version.LUCENE_35, "label",
+				index.getAnalyzer());
+		reader = IndexReader.open(index.getIndex());
+		searcher = new IndexSearcher(reader);
+	}
+
+
+	@Deprecated
 	public void searchTherapyAndDrugChapterInNLMH(List<PatientCase> caseList)
 			throws IOException, ParseException {
 		index = new Index();

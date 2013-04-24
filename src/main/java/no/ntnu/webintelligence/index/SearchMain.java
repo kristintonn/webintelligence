@@ -36,7 +36,7 @@ public class SearchMain {
 
     public SearchMain() throws IOException, ParseException {
         this.search = new Search();
-        /* uncommet to do other searches */
+        /* Uncomment to do other searches */
 //         searchTermsInCases(true, false); //Icd10 in cases
 //         searchTermsInCases(false, true);  //atc in cases
 //         searchTermsInNLMH(true, false); //icd10 in NLMH
@@ -46,13 +46,13 @@ public class SearchMain {
          searchCasesForNLMH(true, true); //search for NLMH chapters for cases (using icd10 and atc)
     }
     
-    public void searchTermsInCases(boolean icd10, boolean atc) throws IOException, ParseException{
+    private void searchTermsInCases(boolean icd10, boolean atc) throws IOException, ParseException{
     	if(icd10 && !atc){ 
-    		search.searchICD10();
+    		search.indexICD10();
     	}else if(atc && !icd10){
-    		search.searchATC();
+    		search.indexATC();
     	}else{
-    		search.searchICD10AndATC();
+    		search.indexICD10AndATC();
     	}
     	caseNotes = search.searchPatientCases();
         for(DocumentMatch d : caseNotes){
@@ -65,13 +65,13 @@ public class SearchMain {
         }
     	
     }
-    public void searchTermsInNLMH(boolean icd10, boolean atc) throws IOException, ParseException{
+    private void searchTermsInNLMH(boolean icd10, boolean atc) throws IOException, ParseException{
     	if(icd10 && !atc){ 
-    		search.searchICD10();
+    		search.indexICD10();
     	}else if(atc && !icd10){
-    		search.searchATC();
+    		search.indexATC();
     	}else{
-    		search.searchICD10AndATC();
+    		search.indexICD10AndATC();
     	}
     	chapters = search.searchNLHChapters();
         for(DocumentMatch d : chapters){
@@ -84,13 +84,13 @@ public class SearchMain {
         }
     	
     }
-    public void searchCaseNotesForNLMH(boolean icd10, boolean atc) throws ParseException, IOException{
+    private void searchCaseNotesForNLMH(boolean icd10, boolean atc) throws ParseException, IOException{
     	if(icd10 && !atc){ 
-    		search.searchICD10();
+    		search.indexICD10();
     	}else if(atc && !icd10){
-    		search.searchATC();
+    		search.indexATC();
     	}else{
-    		search.searchICD10AndATC();
+    		search.indexICD10AndATC();
     	}
 		caseNotes = search.searchPatientCases();
 		System.out.println("IDC matches patient case size: " + caseNotes.size());
@@ -101,13 +101,13 @@ public class SearchMain {
 			findNoteChapters(i);
 		}
     }
-    public void searchCasesForNLMH(boolean icd10, boolean atc) throws IOException, ParseException{
+    private void searchCasesForNLMH(boolean icd10, boolean atc) throws IOException, ParseException{
     	if(icd10 && !atc){ 
-    		search.searchICD10();
+    		search.indexICD10();
     	}else if(atc && !icd10){
-    		search.searchATC();
+    		search.indexATC();
     	}else{
-    		search.searchICD10AndATC();
+    		search.indexICD10AndATC();
     	}
 		caseNotes = search.searchPatientCases();
 		System.out.println("IDC matches patient case size: " + caseNotes.size());
@@ -119,32 +119,7 @@ public class SearchMain {
 		}
     }
     
-//    public void searchtest(ArrayList<DocumentMatch> ICD10InCases, ArrayList<DocumentMatch> ICD10InNLH) throws IOException, ParseException{
-//    	
-//    	Search search = new Search();
-//    	    	
-//    	search.setResultIndex(ICD10InNLH);
-//    	
-//    	for(DocumentMatch caseICD10 : ICD10InCases){
-//    		/**
-//    		 * do search on each case sentence against ICD10InNLH
-//    		 * return ArrayList<DocumentMatch> that holds chapters relevant to sentence
-//    		 */
-//    		ArrayList<DocumentMatch> matches = search.searchInResults(caseICD10); //returns chapters relevant to sentence
-//    		
-//    		for(DocumentMatch dm2 : matches){
-//    			System.out.println(dm2.getID() + ", " + dm2.getSentenceId() + ":");
-//    			for(Document d : dm2.getHits()){
-//    				System.out.println(d.get("id") + "," + d.get("label"));
-//    			}
-//    		}
-//    		
-//    		
-//    	}
-//    	return NHLChaptersInCases;
-//    }
-    
-    public List<DocumentMatch> combindSentences(List<DocumentMatch> list){
+    private List<DocumentMatch> combindSentences(List<DocumentMatch> list){
        	
     	System.out.println("Combinding sentences...");
     	Map<String, List<DocumentHit>> chapterHits = new HashMap<String, List<DocumentHit>>();
@@ -198,14 +173,7 @@ public class SearchMain {
 			}
 			chapterHits.put(dm.getID(), hitList); // reset chapter hit list
 		}
-		
-		
-//		for (Iterator<Entry<String, List<DocumentHit>>> iterator = chapterHits.entrySet()
-//				.iterator(); iterator.hasNext();) {
-//			Entry<String, List<DocumentHit>> e = iterator.next();
-//			System.out.println("Chapter: " + e.getKey());
-//			for(DocumentHit d : e.getValue()) System.out.println("        " + d.getDocument().get("id") + " " + d.getScore());
-//		}
+	
     	
     	System.out.println("Making chapter list...");
     	Entry<String, List<DocumentHit>> chapter;
@@ -220,7 +188,7 @@ public class SearchMain {
     	return newList;
     }
     
-    public void makeTermByDocumentMatrix(List<DocumentMatch> nlmh, boolean atomicCase){
+    private void makeTermByDocumentMatrix(List<DocumentMatch> nlmh, boolean atomicCase){
     	
     	/* Combine sentences in NLMH into documents */
     	chapters = combindSentences(nlmh);
@@ -273,10 +241,10 @@ public class SearchMain {
     }
     
     
-	public void findNoteChapters(int caseNotePlacement) {
+	private void findNoteChapters(int caseNotePlacement) {
 		Map<String, Float> hits = new HashMap<String, Float>();
 		/* For a case sentence terms, find the terms entries of NLMH chapters */
-		System.out.println("Case: " + caseNotes.get(caseNotePlacement).getID() /*+  "- Sentence: " + caseNotes.get(caseNotePlacement).getSentenceId() */+ " - Hits: "+ caseNotes.get(caseNotePlacement).getHits().size());
+		System.out.println("Case: " + caseNotes.get(caseNotePlacement).getID() +  "- Sentence: " + caseNotes.get(caseNotePlacement).getSentenceId() + " - Hits: "+ caseNotes.get(caseNotePlacement).getHits().size());
 		System.out.println("-------------------------------------\n");
 		
 		for (int j = 0; j < matrix[caseNotePlacement].length; j++) {
@@ -290,8 +258,8 @@ public class SearchMain {
 						/* add chapter with corresponding score to hits */
 						if(hits.containsKey(chapters.get(k).getID())){
 							/* Chapter has been found for another term, this should give added score */
-							Float value = hits.get(chapters.get(k).getID());
-							value = new Float(value+matrix[k][j]); //TODO HOW TO CALCULATE THIS?!
+							Float value = new Float(hits.get(chapters.get(k).getID()) + matrix[caseNotePlacement][j]);
+							value = new Float(value+matrix[k][j]);
 						}else{
 							hits.put(chapters.get(k).getID(), matrix[k][j]); 
 						}
@@ -305,7 +273,7 @@ public class SearchMain {
 		Map<String, Float> sortedHits = sortByValue(hits);
 		int i = 1;
 		for(Entry<String, Float> s : sortedHits.entrySet()){
-			System.out.println(i + "." + s.getKey() /*+ " " + s.getValue()*/);
+			System.out.println(i + "." + s.getKey() + " " + s.getValue());
 			i++;
 			if(i>10) break;
 		}
@@ -313,7 +281,7 @@ public class SearchMain {
 
 	}
 
-	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+	private static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
 		List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
 		Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
 			public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
@@ -347,8 +315,7 @@ public class SearchMain {
     			id = dh.getDocument().get("id");
     			/* Check if term already exists in terms list */
     			for(Document t : terms){
-    				if(id.equals(t)){
-    					//TODO does not consider synonyms at the moment
+    				if(id.equals(t.get("id"))){
     					found = true;
     					break;
     				}

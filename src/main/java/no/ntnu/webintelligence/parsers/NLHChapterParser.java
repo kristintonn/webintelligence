@@ -127,14 +127,7 @@ public class NLHChapterParser {
         while ((sCurrentLine = reader.readLine()) != null) {
             in = in.replaceAll(" " + sCurrentLine + " ", " ");
         }
+        reader.close();
         return in;
-    }
-
-    public static void main(String[] args) throws IOException {
-        NLHChapterParser parser = new NLHChapterParser();
-        ArrayList<NLHChapter> chapters = parser.getChapters();
-        for (NLHChapter ch : chapters) {
-            //System.out.println("Ja: " + ch);
-        }
     }
 }

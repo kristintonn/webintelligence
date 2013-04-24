@@ -18,11 +18,9 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
@@ -39,7 +37,7 @@ public class Index {
 
 	public Index() throws IOException {
 		analyzer = new StandardAnalyzer(Version.LUCENE_35);
-		index = new RAMDirectory(); // TODO: Replace
+		index = new RAMDirectory();
 		config = new IndexWriterConfig(Version.LUCENE_35, analyzer);
 
 		/*

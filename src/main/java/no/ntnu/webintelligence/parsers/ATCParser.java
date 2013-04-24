@@ -69,7 +69,4 @@ public class ATCParser {
         return parsedATCs;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        ATCParser parser = new ATCParser();
-    }
 }
