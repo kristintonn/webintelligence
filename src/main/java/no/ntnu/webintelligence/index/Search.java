@@ -6,7 +6,6 @@ package no.ntnu.webintelligence.index;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import no.ntnu.webintelligence.models.DocumentMatch;
 import no.ntnu.webintelligence.models.NLHChapter;
@@ -34,7 +33,6 @@ public class Search {
 	private IndexSearcher searcher;
 	private IndexReader reader;
 	private QueryParser parser;
-	private final int HITS_PER_PAGE = 20;
 
 	public Search() throws IOException, ParseException {
 
@@ -128,43 +126,43 @@ public class Search {
 	}
 
 
-	@Deprecated
-	public void searchTherapyAndDrugChapterInNLMH(List<PatientCase> caseList)
-			throws IOException, ParseException {
-		index = new Index();
-		index.addNLMH(true);
-		parser = new QueryParser(Version.LUCENE_35, "text", index.getAnalyzer());
-		reader = IndexReader.open(index.getIndex());
-		searcher = new IndexSearcher(reader);
-
-		ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
-		for (PatientCase c : caseList) {
-			for (int j = 0; j < c.getSentences().length; j++) {
-				DocumentMatch match = new DocumentMatch(Integer.toString(c
-						.getId()), j);
-				String s = c.getSentences()[j];
-				s = s.trim();
-				if (s.length() > 0) {
-					System.out.println("S: " + s);
-
-					ScoreDoc[] hits = searchDocument(s, HITS_PER_PAGE);
-					// System.out.println("Found " + hits.length + " hits");
-					for (int i = 0; i < hits.length; i++) {
-						int docId = hits[i].doc;
-						Float score = new Float(hits[i].score);
-						Document d = searcher.doc(docId);
-						// System.out.println((i + 1) + ". " + d.get("id") +
-						// "\t" + d.get("title"));
-						match.addHit(score, d);
-					}
-					if (match.getHits().size() > 0) {
-						matches.add(match);
-					}
-				}
-
-			}
-		}
-	}
+//	@Deprecated
+//	public void searchTherapyAndDrugChapterInNLMH(List<PatientCase> caseList)
+//			throws IOException, ParseException {
+//		index = new Index();
+//		index.addNLMH(true);
+//		parser = new QueryParser(Version.LUCENE_35, "text", index.getAnalyzer());
+//		reader = IndexReader.open(index.getIndex());
+//		searcher = new IndexSearcher(reader);
+//
+//		ArrayList<DocumentMatch> matches = new ArrayList<DocumentMatch>();
+//		for (PatientCase c : caseList) {
+//			for (int j = 0; j < c.getSentences().length; j++) {
+//				DocumentMatch match = new DocumentMatch(Integer.toString(c
+//						.getId()), j);
+//				String s = c.getSentences()[j];
+//				s = s.trim();
+//				if (s.length() > 0) {
+//					System.out.println("S: " + s);
+//
+//					ScoreDoc[] hits = searchDocument(s, HITS_PER_PAGE);
+//					// System.out.println("Found " + hits.length + " hits");
+//					for (int i = 0; i < hits.length; i++) {
+//						int docId = hits[i].doc;
+//						Float score = new Float(hits[i].score);
+//						Document d = searcher.doc(docId);
+//						// System.out.println((i + 1) + ". " + d.get("id") +
+//						// "\t" + d.get("title"));
+//						match.addHit(score, d);
+//					}
+//					if (match.getHits().size() > 0) {
+//						matches.add(match);
+//					}
+//				}
+//
+//			}
+//		}
+//	}
 
 	public ArrayList<DocumentMatch> searchPatientCases() throws ParseException,
 			IOException {
@@ -228,9 +226,5 @@ public class Search {
 			}
 		}
 		return matches;
-	}
-
-	public static void main(String[] args) throws IOException, ParseException {
-
 	}
 }

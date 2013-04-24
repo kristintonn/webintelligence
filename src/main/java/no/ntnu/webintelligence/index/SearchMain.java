@@ -209,6 +209,7 @@ public class SearchMain {
     	String id;
     	Document doc;
     	System.out.println("Making term-by-document matrix from patient cases(" + caseNotes.size() + ") and terms("+terms.size()+")...");
+    	
     	/* Put patient cases into matrix */
     	for(int i=0; i<caseNotes.size(); i++){
     		for(DocumentHit hit : caseNotes.get(i).getHits()){
@@ -261,7 +262,7 @@ public class SearchMain {
 							Float value = new Float(hits.get(chapters.get(k).getID()) + matrix[caseNotePlacement][j]);
 							value = new Float(value+matrix[k][j]);
 						}else{
-							hits.put(chapters.get(k).getID(), matrix[k][j]); 
+							hits.put(chapters.get(k).getID(), matrix[k][j] + matrix[caseNotePlacement][j]); 
 						}
 						
 					}
@@ -274,6 +275,14 @@ public class SearchMain {
 		int i = 1;
 		for(Entry<String, Float> s : sortedHits.entrySet()){
 			System.out.println(i + "." + s.getKey() + " " + s.getValue());
+//			NLHChapterParser ncp = new NLHChapterParser();
+//			List<NLHChapter> chapters = ncp.getChapters();
+//			for(NLHChapter c : chapters){
+//				if(s.getKey().equals(c.getId())){
+//					System.out.println(i + "." + s.getKey() + " " + s.getValue() + " " + c.getTitle());
+//					break;
+//				}
+//			}
 			i++;
 			if(i>10) break;
 		}

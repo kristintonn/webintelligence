@@ -9,10 +9,8 @@ import java.util.ArrayList;
 
 import no.ntnu.webintelligence.models.ATC;
 import no.ntnu.webintelligence.models.ICD10;
-import no.ntnu.webintelligence.models.NLHChapter;
 import no.ntnu.webintelligence.parsers.ATCParser;
 import no.ntnu.webintelligence.parsers.ICD10Parser;
-import no.ntnu.webintelligence.parsers.NLHChapterParser;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -30,10 +28,10 @@ import org.apache.lucene.util.Version;
  */
 public class Index {
 
-	Directory index;
-	Analyzer analyzer;
-	IndexWriter writer;
-	IndexWriterConfig config;
+	private Directory index;
+	private Analyzer analyzer;
+	private IndexWriter writer;
+	private IndexWriterConfig config;
 
 	public Index() throws IOException {
 		analyzer = new StandardAnalyzer(Version.LUCENE_35);
@@ -125,39 +123,6 @@ public class Index {
 		writer.close();
 	}
 
-	/**
-	 * add Legemiddelhåndboka to index
-	 * 
-	 * @param TherapyAndDrugChaptersOnly
-	 *            true if only therapy and drug chapters should be included,
-	 *            false if all chapters is to be included.
-	 */
-	public void addNLMH(boolean TherapyAndDrugChaptersOnly) throws IOException {
-		writer = new IndexWriter(index, config);
-
-		NLHChapterParser parser = new NLHChapterParser();
-		ArrayList<NLHChapter> parsedChapters = parser.getChapters();
-		int counter = 0;
-		for (NLHChapter c : parsedChapters) {
-			if (!TherapyAndDrugChaptersOnly || c.getId().startsWith("L")
-					|| c.getId().startsWith("T")) {
-				Document doc = new Document();
-				doc.add(new Field("id", c.getId(), Field.Store.YES,
-						Field.Index.ANALYZED));
-				doc.add(new Field("title", c.getTitle() == null ? "" : c
-						.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
-				doc.add(new Field("text", c.getText(), Field.Store.YES,
-						Field.Index.ANALYZED));
-				writer.addDocument(doc);
-				writer.commit();
-				// System.out.println(c.getText());
-				counter++;
-			}
-
-		}
-		System.out.println("added " + counter + " chapters!");
-		writer.close();
-	}
 
 	/**
 	 * Adds a result of an ICD10 search on NLH to index

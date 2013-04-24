@@ -14,9 +14,9 @@ import org.apache.lucene.document.Document;
  * @author Kristin
  */
 public class DocumentMatch {
-    String id;
-    int sentenceId;
-    List<DocumentHit> hits;
+    private String id;
+    private int sentenceId;
+    private List<DocumentHit> hits;
     
     public DocumentMatch(String id, int sentenceId){
         this.id = id;
